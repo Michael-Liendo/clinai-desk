@@ -17,11 +17,13 @@ export const UserForRegisterSchema = UserSchema.omit({
 	is_active: true,
 	created_at: true,
 	updated_at: true,
+}).extend({
+	password: z.string(),
 });
 
-export const UserLoginSchema = UserSchema.pick({
-	email: true,
-	password: true,
+export const UserLoginSchema = z.object({
+	email: z.string().email().describe("unique"),
+	password: z.string(),
 });
 
 export const UserForUpdateSchema = UserSchema.omit({

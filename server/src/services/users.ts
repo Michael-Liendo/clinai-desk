@@ -1,7 +1,7 @@
-import type { IUser, IUserForUpdate } from "@clinai/shared";
+import type { IUser, IUserForRegister, IUserForUpdate } from "@clinai/shared";
 import Repository from "../repository";
 import { BadRequestError } from "../utils/errorHandler";
-import { comparePassword, hashPassword } from "../utils/password";
+import { hashPassword } from "../utils/password";
 
 export default class Users {
 	static async getByID(userID: string): Promise<IUser | undefined> {
@@ -10,28 +10,56 @@ export default class Users {
 		return user;
 	}
 
+	static async create(dto: IUserForRegister): Promise<IUser> {
+		// Validate unique email
+		const existing = await Repository.users.getUserByEmail(dto.email);
+		if (existing) {
+			throw new BadRequestError("User email already exists");
+		}
+
+		// Hash password if provided
+		if (dto.password) {
+			dto.password = await hashPassword(dto.password);
+		}
+
+		const created = await Repository.users.createUser(dto);
+		return created;
+	}
+
 	static async update(
 		id: string,
 		userUpdates: Partial<IUserForUpdate>,
-		hash_old_password: string,
 	): Promise<boolean> {
-		if (userUpdates.password && userUpdates.old_password && hash_old_password) {
-			if (
-				!(await comparePassword(userUpdates.old_password, hash_old_password))
-			) {
-				throw new BadRequestError("Invalid password");
-			}
-			const hashedPassword = await hashPassword(userUpdates.password);
-			userUpdates.password = hashedPassword;
+		// Ensure user exists
+		const current = await Repository.users.getUserByID(id);
+		if (!current) {
+			throw new BadRequestError("User not found");
 		}
-		// biome-ignore lint/correctness/noUnusedVariables: for no pass old password
-		const { old_password: removedValue, ...userToUpdate } = userUpdates;
 
-		const updated = await Repository.users.updateUser(id, userToUpdate);
+		// Normalize and validate email if updating
+		if (userUpdates.email) {
+			userUpdates.email = userUpdates.email.trim().toLowerCase();
+			const taken = await Repository.users.getUserByEmail(userUpdates.email);
+			if (taken && taken.id !== id) {
+				throw new BadRequestError("User email already exists");
+			}
+		}
+
+		// Hash password if updating
+		if (userUpdates.password) {
+			userUpdates.password = await hashPassword(userUpdates.password);
+		}
+
+		const updated = await Repository.users.updateUser(id, userUpdates);
 		return updated;
 	}
 
 	static async delete(id: string): Promise<boolean> {
+		// Ensure user exists before deleting
+		const current = await Repository.users.getUserByID(id);
+		if (!current) {
+			throw new BadRequestError("User not found");
+		}
 		const deleted = await Repository.users.deleteUser(id);
 		return deleted;
 	}
