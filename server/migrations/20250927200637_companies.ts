@@ -2,6 +2,7 @@ import { MasterNameEnum } from "@clinai/shared";
 import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
+	await knex.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
 	await knex.schema.createTable(MasterNameEnum.Values.companies, (table) => {
 		table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
 		table.string("name").notNullable();
@@ -9,8 +10,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.string("address").notNullable();
 		table.string("phone").notNullable();
 		table.boolean("is_active").notNullable().defaultTo(true);
-		table.timestamp("created_at").notNullable().defaultTo(knex.fn.now());
-		table.timestamp("updated_at").notNullable().defaultTo(knex.fn.now());
+		table.timestamps(true, true);
 	});
 }
 

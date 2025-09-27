@@ -6,11 +6,18 @@ export async function up(knex: Knex): Promise<void> {
 		MasterNameEnum.Values.clinics_user,
 		(table) => {
 			table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
-			table.uuid("clinic_id").references("id").inTable("clinics").notNullable();
-			table.uuid("user_id").references("id").inTable("users").notNullable();
+			table
+				.uuid("company_id")
+				.references("id")
+				.inTable(MasterNameEnum.Values.companies)
+				.notNullable();
+			table
+				.uuid("user_id")
+				.references("id")
+				.inTable(MasterNameEnum.Values.users)
+				.notNullable();
 			table.enum("role", ["admin", "doctor", "assistant"]).notNullable();
-			table.timestamp("created_at").notNullable().defaultTo(knex.fn.now());
-			table.timestamp("updated_at").notNullable().defaultTo(knex.fn.now());
+			table.timestamps(true, true);
 		},
 	);
 }

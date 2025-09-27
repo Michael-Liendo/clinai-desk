@@ -12,6 +12,8 @@
 		"migrations:make": "knex migrate:make -x ts",
 		"migrations:up": "knex migrate:latest",
 		"migrations:down": "knex migrate:down",
+		"seeds:make": "knex seed:make -x ts",
+		"seeds:run": "knex seed:run",
 		"lint": "biome format ./ && biome check ./",
 		"format": "biome format --write ./ && biome check --write ./",
 		"format:unsafe": "biome format --write ./ && biome check --write --unsafe ./"
@@ -31,6 +33,7 @@
 	"homepage": "https://github.com/Michael-Liendo/clinai#readme",
 	"dependencies": {
 		"@clinai/shared": "^0.0.1",
+		"@faker-js/faker": "^9.9.0",
 		"@fastify/cors": "^8.5.0",
 		"@types/jsonwebtoken": "^9.0.10",
 		"bcrypt": "^5.1.1",

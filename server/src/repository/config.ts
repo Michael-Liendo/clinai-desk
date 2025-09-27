@@ -12,7 +12,7 @@ const knexConfig: { [key: string]: Knex.Config } = {
 			user: EnvConfig().DEV_POSTGRES_USER,
 			password: EnvConfig().DEV_POSTGRES_PASSWORD,
 			database: EnvConfig().DEV_POSTGRES_DB,
-			ssl: { rejectUnauthorized: false },
+			ssl: true,
 		},
 		pool: { min: 1, max: 10 },
 	},
