@@ -1,0 +1,36 @@
+{
+	"name": "@clinai/root",
+	"version": "0.4.0",
+	"workspaces": [
+		"shared/",
+		"server/",
+		"client/"
+	],
+	"scripts": {
+		"client:start": "npm run start -w @clinai/client",
+		"server:start": "npm run start -w @clinai/server",
+		"build": "npm run build --ws",
+		"client:build": "npm run build -w @clinai/client",
+		"shared:build": "npm run build -w @clinai/shared",
+		"server:build": "npm run build -w @clinai/server",
+		"client:dev": "npm run dev -w @clinai/client",
+		"server:dev": "npm run dev -w @clinai/server",
+		"lint": "npm run lint --ws",
+		"format": "npm run format --ws",
+		"format:unsafe": "npm run format:unsafe --ws",
+		"client:lint": "npm run lint -w @clinai/client",
+		"client:format": "npm run format -w @clinai/client",
+		"client:format:unsafe": "npm run format:unsafe -w @clinai/client",
+		"server:lint": "npm run lint -w @clinai/server",
+		"server:format": "npm run format -w @clinai/server",
+		"server:format:unsafe": "npm run format:unsafe -w @clinai/server",
+		"server:migrations:up": "npm run migrations:up -w @clinai/server",
+		"server:migrations:down": "npm run migrations:down -w @clinai/server"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.0.6"
+	},
+	"dependencies": {
+		"zod": "^3.25.76"
+	}
+}
