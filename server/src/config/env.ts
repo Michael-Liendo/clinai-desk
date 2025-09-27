@@ -5,6 +5,7 @@ dotenv.config();
 const {
 	NODE_ENV = "development",
 	PORT = 3000,
+	HOST = "127.0.0.1",
 	SALT_ROUNDS = 10,
 	CORS_ORIGIN = "http://localhost:3000,http://localhost:3001,http://localhost:5173,http://localhost,capacitor://localhost",
 	JWT_PRIVATE_KEY = "clinai",
@@ -12,27 +13,13 @@ const {
 	POSTGRES_PASSWORD = "password",
 	POSTGRES_USER = "user",
 	POSTGRES_DB = "server-app",
-	HOST = "127.0.0.1",
-	GOOGLE_WEB_CLIENT_ID = "949333678429-oe1rf6vjba58iukt1g2ckcipdjas0nd8.apps.googleusercontent.com",
+	DEV_POSTGRES_HOST = "0.0.0.0",
+	DEV_POSTGRES_PASSWORD = "password",
+	DEV_POSTGRES_USER = "user",
+	DEV_POSTGRES_DB = "server-app",
 } = process.env;
 
 export const EnvConfig = () => {
-	if (NODE_ENV === "production") {
-		return {
-			NODE_ENV,
-			HOST,
-			PORT,
-			SALT_ROUNDS,
-			CORS_ORIGIN,
-			JWT_PRIVATE_KEY,
-			POSTGRES_HOST,
-			POSTGRES_PASSWORD,
-			POSTGRES_USER,
-			POSTGRES_DB,
-			GOOGLE_WEB_CLIENT_ID,
-		};
-	}
-
 	return {
 		NODE_ENV,
 		HOST,
@@ -44,6 +31,9 @@ export const EnvConfig = () => {
 		POSTGRES_PASSWORD,
 		POSTGRES_USER,
 		POSTGRES_DB,
-		GOOGLE_WEB_CLIENT_ID,
+		DEV_POSTGRES_HOST,
+		DEV_POSTGRES_PASSWORD,
+		DEV_POSTGRES_USER,
+		DEV_POSTGRES_DB,
 	};
 };
