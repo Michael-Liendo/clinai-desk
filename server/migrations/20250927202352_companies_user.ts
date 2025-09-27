@@ -3,7 +3,7 @@ import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
 	await knex.schema.createTableIfNotExists(
-		MasterNameEnum.Values.clinics_user,
+		MasterNameEnum.Values.companies_user,
 		(table) => {
 			table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
 			table
@@ -23,5 +23,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-	await knex.schema.dropTable(MasterNameEnum.Values.clinics_user);
+	await knex.schema.dropTable(MasterNameEnum.Values.companies_user);
 }
