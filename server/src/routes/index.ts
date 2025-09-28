@@ -5,6 +5,7 @@ import auth from "./auth";
 import companies from "./companies";
 import user from "./user";
 import companiesUser from "./users_companies";
+import patients from "./patients";
 
 export default function routes(
 	fastify: FastifyInstance,
@@ -50,6 +51,7 @@ export default function routes(
 	fastify.register(admin, { prefix: "/admin" });
 	fastify.register(companies, { prefix: "/companies" });
 	fastify.register(companiesUser, { prefix: "/users-companies" });
+	fastify.register(patients, { prefix: "/patients" });
 
 	done();
 }
