@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PrivateRoutesEnum } from "@/data/routesEnums";
+import { AuthRoutesEnum, PrivateRoutesEnum } from "@/data/routesEnums";
 import { useAuth } from "@/features/auth";
 import { useSEO } from "@/features/seo";
 import { toast } from "@/features/ui/useToast";
@@ -81,24 +81,25 @@ export default function LoginPage() {
 								type="text"
 								name="email"
 								autoComplete="email"
-								placeholder="email"
+								placeholder="correo@dominio.com"
 								label="Correo"
 								value={values.email}
 								error={errors.email}
 								onChange={handleChange}
+								required
 							/>
 
 							<TextField
 								type="password"
+								label="Contraseña"
 								name="password"
 								autoComplete="current-password"
 								placeholder="* * * * * * *"
-								label="Contraseña"
 								value={values.password}
 								error={errors.password}
 								onChange={handleChange}
+								required
 							/>
-
 							<Button
 								type="submit"
 								className="w-full mt-4"
@@ -106,6 +107,15 @@ export default function LoginPage() {
 							>
 								{isSubmitting ? "Cargando..." : "Entrar"}
 							</Button>
+							<div className="text-center text-sm text-muted-foreground">
+								¿No tienes cuenta?{" "}
+								<a
+									href={AuthRoutesEnum.Register}
+									className="text-primary underline"
+								>
+									Regístrate
+								</a>
+							</div>
 						</form>
 					</CardContent>
 				</Card>
