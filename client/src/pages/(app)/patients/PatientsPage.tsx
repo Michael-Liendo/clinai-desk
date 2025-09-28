@@ -8,6 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { PrivateRoutesEnum } from "@/data/routesEnums";
 import { TextField } from "@/components/text-field";
 import { useSEO } from "@/features/seo";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function PatientsPage() {
 	useSEO({
@@ -86,6 +88,9 @@ export default function PatientsPage() {
 					onChange={(e) => setSearch(e.target.value)}
 					className="w-80"
 				/>
+				<Link to={PrivateRoutesEnum.PatientCreate} className="ml-auto">
+					<Button>Crear paciente</Button>
+				</Link>
 			</div>
 
 			<DataTable

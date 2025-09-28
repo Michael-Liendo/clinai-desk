@@ -1,4 +1,7 @@
 import { DataTableColumnHeader } from "@/components/table/header";
+import { Button } from "@/components/ui/button";
+import { PrivateRoutesEnum } from "@/data/routesEnums";
+import { Link } from "react-router-dom";
 import type { IPatient } from "@clinai/shared";
 import type { ColumnDef } from "@tanstack/react-table";
 
@@ -90,5 +93,21 @@ export const PatientsDatagrid: ColumnDef<IPatient>[] = [
 				</div>
 			);
 		},
+	},
+	{
+		id: "actions",
+		header: () => null,
+		cell: ({ row }) => {
+			const id = row.original.id;
+			return (
+				<div className="flex justify-end">
+					<Link to={PrivateRoutesEnum.PatientDetails.replace(":id", id)}>
+						<Button size="sm" variant="outline">Ver</Button>
+					</Link>
+				</div>
+			);
+		},
+		enableSorting: false,
+		enableHiding: false,
 	},
 ];

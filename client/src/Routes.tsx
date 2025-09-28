@@ -16,6 +16,7 @@ import Login from "./pages/(auth)/Login";
 import Register from "./pages/(auth)/Register";
 import PatientsPage from "./pages/(app)/patients/PatientsPage";
 import PatientDetailsPage from "./pages/(app)/patients/PatientDetailsPage";
+import PatientCreatePage from "./pages/(app)/patients/PatientCreatePage";
 
 const PrivateRoutesWrapper = () => {
 	const { token, authInitialized } = useAuth();
@@ -73,6 +74,11 @@ const PrivateRoutes: JSX.Element[] = [
 		key={PrivateRoutesEnum.PatientDetails}
 		path={PrivateRoutesEnum.PatientDetails}
 		Component={PatientDetailsPage}
+	/>,
+	<Route
+		key={PrivateRoutesEnum.PatientCreate}
+		path={PrivateRoutesEnum.PatientCreate}
+		Component={PatientCreatePage}
 	/>,
 ];
 

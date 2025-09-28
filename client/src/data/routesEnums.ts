@@ -10,4 +10,5 @@ export enum PrivateRoutesEnum {
 	CompanyDetails = "/companies/:id",
 	Patients = "/patients",
 	PatientDetails = "/patients/:id",
+	PatientCreate = "/patients/create",
 }
