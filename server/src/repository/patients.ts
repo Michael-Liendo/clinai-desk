@@ -62,7 +62,8 @@ export class Patients {
 		limit = 10,
 	): Promise<{ data: IPatient[]; count: number }> {
 		const offset = (page - 1) * limit;
-		const searchPattern = `%${searchTerm}%`;
+		const normalized = (searchTerm || "").trim().replace(/\s+/g, " ");
+		const searchPattern = `%${normalized}%`;
 
 		const baseQuery = database<IPatient>("patients")
 			.where({ company_id: companyId, is_active: true })
@@ -70,7 +71,13 @@ export class Patients {
 				this.whereILike("first_name", searchPattern)
 					.orWhereILike("last_name", searchPattern)
 					.orWhereILike("dni", searchPattern)
-					.orWhereILike("email", searchPattern);
+					.orWhereILike("email", searchPattern)
+					.orWhereRaw("concat(first_name, ' ', last_name) ILIKE ?", [
+						searchPattern,
+					])
+					.orWhereRaw("concat(last_name, ' ', first_name) ILIKE ?", [
+						searchPattern,
+					]);
 			});
 
 		const [data, countResult] = await Promise.all([
