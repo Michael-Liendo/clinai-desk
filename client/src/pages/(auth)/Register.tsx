@@ -1,7 +1,7 @@
 import { APP_NAME_CAPITALIZED, UserForRegisterSchema } from "@clinai/shared";
 import { useFormik } from "formik";
 import { Check, GalleryVerticalEnd, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TextField } from "@/components/text-field";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,9 +9,8 @@ import { AuthRoutesEnum, PrivateRoutesEnum } from "@/data/routesEnums";
 import { useAuth } from "@/features/auth";
 import { useSEO } from "@/features/seo";
 import { toast } from "@/features/ui/useToast";
-import { toFormikValidationSchema } from "@/utils/toFormikValidationSchema";
 import Services from "@/services";
-import { Link } from "react-router-dom";
+import { toFormikValidationSchema } from "@/utils/toFormikValidationSchema";
 
 export default function RegisterPage() {
 	useSEO({ title: "Registro" });
@@ -54,7 +53,7 @@ export default function RegisterPage() {
 					typeof rawToken === "string"
 						? rawToken
 						: // some backends return { token: string }
-						  (rawToken as { token?: string })?.token;
+							(rawToken as { token?: string })?.token;
 				if (!tokenValue || !user) throw new Error("Invalid register response");
 				setToken(tokenValue);
 

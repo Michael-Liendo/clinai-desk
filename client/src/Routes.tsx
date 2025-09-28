@@ -8,11 +8,11 @@ import {
 } from "react-router-dom";
 import { useAuth } from "@/features/auth";
 import AppLayout from "./components/app-layout";
+import { LoadingFullScreen } from "./components/loading";
 import { AuthRoutesEnum, PrivateRoutesEnum } from "./data/routesEnums";
 import Home from "./pages/(app)/home";
 import Login from "./pages/(auth)/Login";
 import Register from "./pages/(auth)/Register";
-import { LoadingFullScreen } from "./components/loading";
 
 const PrivateRoutesWrapper = () => {
 	const { token, authInitialized } = useAuth();
