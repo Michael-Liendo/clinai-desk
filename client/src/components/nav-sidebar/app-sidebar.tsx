@@ -1,4 +1,4 @@
-import { MenuIcon, XIcon } from "lucide-react";
+import { HomeIcon, MenuIcon, XIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
 	Sidebar,
@@ -14,7 +14,7 @@ import {
 	SidebarRail,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import type { PrivateRoutesEnum } from "@/data/routesEnums";
+import { PrivateRoutesEnum } from "@/data/routesEnums";
 import { useIsMobile } from "@/features/ui";
 import { CompanySwitcher } from "./company-switcher";
 import { NavUser } from "./nav-user";
@@ -28,7 +28,18 @@ type NavItem = {
 	>;
 };
 
-const navMain: { title: string; items: NavItem[] }[] = [];
+const navMain: { title: string; items: NavItem[] }[] = [
+	{
+		title: "Principal",
+		items: [
+			{
+				title: "Home",
+				url: PrivateRoutesEnum.Home,
+				icon: HomeIcon,
+			},
+		],
+	},
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { pathname } = useLocation();

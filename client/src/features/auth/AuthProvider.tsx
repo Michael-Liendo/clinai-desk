@@ -42,7 +42,6 @@ export const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
 			if (!token) return null;
 			try {
 				const user = await Services.users.me();
-				console.log(user);
 				return user;
 				// biome-ignore lint: no know the type
 			} catch (error: any) {

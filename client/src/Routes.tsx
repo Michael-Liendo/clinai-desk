@@ -55,7 +55,8 @@ export function Routes() {
 }
 
 const PrivateRoutes: JSX.Element[] = [
-	<Route key={PrivateRoutesEnum.Home} Component={Home} />,
+	// Use an index route for Home so it renders at '/'
+	<Route key={PrivateRoutesEnum.Home} index Component={Home} />,
 	<Route
 		key={PrivateRoutesEnum.CompanyDetails}
 		path={PrivateRoutesEnum.CompanyDetails}
