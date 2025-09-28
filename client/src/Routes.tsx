@@ -14,6 +14,8 @@ import CompanyDetailsPage from "./pages/(app)/companies/CompanyDetailsPage";
 import Home from "./pages/(app)/home";
 import Login from "./pages/(auth)/Login";
 import Register from "./pages/(auth)/Register";
+import PatientsPage from "./pages/(app)/patients/PatientsPage";
+import PatientDetailsPage from "./pages/(app)/patients/PatientDetailsPage";
 
 const PrivateRoutesWrapper = () => {
 	const { token, authInitialized } = useAuth();
@@ -61,6 +63,16 @@ const PrivateRoutes: JSX.Element[] = [
 		key={PrivateRoutesEnum.CompanyDetails}
 		path={PrivateRoutesEnum.CompanyDetails}
 		Component={CompanyDetailsPage}
+	/>,
+	<Route
+		key={PrivateRoutesEnum.Patients}
+		path={PrivateRoutesEnum.Patients}
+		Component={PatientsPage}
+	/>,
+	<Route
+		key={PrivateRoutesEnum.PatientDetails}
+		path={PrivateRoutesEnum.PatientDetails}
+		Component={PatientDetailsPage}
 	/>,
 ];
 

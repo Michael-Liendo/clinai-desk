@@ -5,6 +5,7 @@ import type {
 } from "@clinai/shared";
 import Services from "../services";
 import type { Reply, Request } from "../types";
+import { BadRequestError } from "../utils/errorHandler";
 
 export async function getOne(request: Request, reply: Reply) {
 	const { id } = request.params as { id: string };
@@ -13,17 +14,21 @@ export async function getOne(request: Request, reply: Reply) {
 }
 
 export async function find(request: Request, reply: Reply) {
+	const { company_id } = request.params as { company_id: string };
 	const {
 		q = "",
 		page = "1",
 		limit = "50",
-		company_id,
 	} = request.query as {
 		q?: string;
 		page?: string;
 		limit?: string;
-		company_id: string;
 	};
+
+	if (!company_id) {
+		throw new BadRequestError("Company ID is required");
+	}
+
 	const pageNum = Number(page) || 1;
 	const limitNum = Number(limit) || 50;
 	const result = q
