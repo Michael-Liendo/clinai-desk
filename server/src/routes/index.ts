@@ -3,6 +3,8 @@ import type { ErrorWithDetails } from "../utils/errorHandler";
 import admin from "./admin";
 import auth from "./auth";
 import user from "./user";
+import companies from "./companies";
+import companiesUser from "./users_companies";
 
 export default function routes(
 	fastify: FastifyInstance,
@@ -46,6 +48,8 @@ export default function routes(
 	fastify.register(auth, { prefix: "/auth" });
 	fastify.register(user, { prefix: "/users" });
 	fastify.register(admin, { prefix: "/admin" });
+	fastify.register(companies, { prefix: "/companies" });
+	fastify.register(companiesUser, { prefix: "/users-companies" });
 
 	done();
 }
