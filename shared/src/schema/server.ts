@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-export const MasterNameEnum = z.enum(["companies", "users", "companies_user", "patients"]);
+export const MasterNameEnum = z.enum([
+	"companies",
+	"users",
+	"companies_user",
+	"patients",
+]);
 
 export interface IReply {
 	200: ISResponse<unknown>;

@@ -1,15 +1,15 @@
+import type { IPaginationResponse } from "@clinai/shared";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { PatientsDatagrid } from "@/components/entity/patient/datagrid";
 import { DataTable } from "@/components/table/data-table";
-import { useCompanyContext } from "@/context/CompanyContext";
-import Services from "@/services";
-import type { IPaginationResponse } from "@clinai/shared";
-import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { PrivateRoutesEnum } from "@/data/routesEnums";
 import { TextField } from "@/components/text-field";
-import { useSEO } from "@/features/seo";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { useCompanyContext } from "@/context/CompanyContext";
+import { PrivateRoutesEnum } from "@/data/routesEnums";
+import { useSEO } from "@/features/seo";
+import Services from "@/services";
 
 export default function PatientsPage() {
 	useSEO({

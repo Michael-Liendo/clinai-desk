@@ -1,9 +1,9 @@
 import AdminService from "./admin.service";
 import Auth from "./auth.service";
 import Companies from "./companies.service";
+import Patients from "./patients.service";
 import Users from "./users.service";
 import CompaniesUser from "./users_companies.service";
-import Patients from "./patients.service";
 
 export default class Services {
 	static auth = Auth;

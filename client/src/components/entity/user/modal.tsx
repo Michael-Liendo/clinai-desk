@@ -60,7 +60,7 @@ export function UserModalMutate({
 			first_name: isEdit ? (user?.first_name ?? "") : "",
 			last_name: isEdit ? (user?.last_name ?? "") : "",
 			email: isEdit ? (user?.email ?? "") : "",
-			phone: isEdit ? ((user as any)?.phone ?? "") : "",
+			phone: isEdit ? (user?.phone ?? "") : "",
 			password: "",
 			role: "doctor" as TCompanyUserRole,
 		},
@@ -215,7 +215,7 @@ export function UserModalMutate({
 						label="Teléfono"
 						name="phone"
 						placeholder="Número de teléfono"
-						value={(values as any).phone}
+						value={values.phone}
 						onChange={handleChange}
 					/>
 

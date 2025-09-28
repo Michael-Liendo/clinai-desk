@@ -3,9 +3,9 @@ import type { ErrorWithDetails } from "../utils/errorHandler";
 import admin from "./admin";
 import auth from "./auth";
 import companies from "./companies";
+import patients from "./patients";
 import user from "./user";
 import companiesUser from "./users_companies";
-import patients from "./patients";
 
 export default function routes(
 	fastify: FastifyInstance,

@@ -1,8 +1,8 @@
 import { AuthService } from "./auth";
 import { CompaniesService } from "./companies";
+import { PatientsService } from "./patients";
 import { UserService } from "./users";
 import { UsersCompaniesService } from "./users_companies";
-import { PatientsService } from "./patients";
 
 export default class Services {
 	static auth = AuthService;

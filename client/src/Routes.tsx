@@ -12,11 +12,11 @@ import { LoadingFullScreen } from "./components/loading";
 import { AuthRoutesEnum, PrivateRoutesEnum } from "./data/routesEnums";
 import CompanyDetailsPage from "./pages/(app)/companies/CompanyDetailsPage";
 import Home from "./pages/(app)/home";
+import PatientCreatePage from "./pages/(app)/patients/PatientCreatePage";
+import PatientDetailsPage from "./pages/(app)/patients/PatientDetailsPage";
+import PatientsPage from "./pages/(app)/patients/PatientsPage";
 import Login from "./pages/(auth)/Login";
 import Register from "./pages/(auth)/Register";
-import PatientsPage from "./pages/(app)/patients/PatientsPage";
-import PatientDetailsPage from "./pages/(app)/patients/PatientDetailsPage";
-import PatientCreatePage from "./pages/(app)/patients/PatientCreatePage";
 
 const PrivateRoutesWrapper = () => {
 	const { token, authInitialized } = useAuth();

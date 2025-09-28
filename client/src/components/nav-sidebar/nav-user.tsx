@@ -1,7 +1,8 @@
 import { IconDotsVertical, IconEdit } from "@tabler/icons-react";
 import { LogOut } from "lucide-react";
-import { useNavigate } from "react-router";
 import { useState } from "react";
+import { useNavigate } from "react-router";
+import { UserModalMutate } from "@/components/entity/user/modal";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -10,7 +11,6 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserModalMutate } from "@/components/entity/user/modal";
 import {
 	SidebarMenu,
 	SidebarMenuButton,

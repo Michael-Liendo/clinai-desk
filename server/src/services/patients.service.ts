@@ -4,8 +4,8 @@ import type {
 	IPatientForUpdate,
 } from "@clinai/shared";
 import Repository from "../repository";
-import { BadRequestError, NotFoundError } from "../utils/errorHandler";
 import Services from "../services";
+import { BadRequestError, NotFoundError } from "../utils/errorHandler";
 
 export default class PatientsService {
 	static async getByID(id: string): Promise<IPatient> {

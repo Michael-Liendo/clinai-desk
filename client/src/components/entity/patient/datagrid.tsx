@@ -1,9 +1,9 @@
+import type { IPatient } from "@clinai/shared";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Link } from "react-router-dom";
 import { DataTableColumnHeader } from "@/components/table/header";
 import { Button } from "@/components/ui/button";
 import { PrivateRoutesEnum } from "@/data/routesEnums";
-import { Link } from "react-router-dom";
-import type { IPatient } from "@clinai/shared";
-import type { ColumnDef } from "@tanstack/react-table";
 
 export const PatientsDatagrid: ColumnDef<IPatient>[] = [
 	{
@@ -84,10 +84,10 @@ export const PatientsDatagrid: ColumnDef<IPatient>[] = [
 					<span className="truncate font-medium">
 						{date
 							? date.toLocaleDateString("es-ES", {
-								month: "2-digit",
-								day: "2-digit",
-								year: "numeric",
-							})
+									month: "2-digit",
+									day: "2-digit",
+									year: "numeric",
+								})
 							: "-"}
 					</span>
 				</div>
@@ -102,7 +102,9 @@ export const PatientsDatagrid: ColumnDef<IPatient>[] = [
 			return (
 				<div className="flex justify-end">
 					<Link to={PrivateRoutesEnum.PatientDetails.replace(":id", id)}>
-						<Button size="sm" variant="outline">Ver</Button>
+						<Button size="sm" variant="outline">
+							Ver
+						</Button>
 					</Link>
 				</div>
 			);

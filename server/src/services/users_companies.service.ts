@@ -4,6 +4,7 @@ import type {
 	ICompanyUserForUpdate,
 } from "@clinai/shared";
 import Repository from "../repository";
+import { BadRequestError } from "../utils/errorHandler";
 
 export default class CompaniesUserService {
 	static async getByID(id: string): Promise<ICompanyUser | undefined> {
@@ -27,6 +28,18 @@ export default class CompaniesUserService {
 	}
 
 	static async create(dto: ICompanyUserForRegister): Promise<ICompanyUser> {
+		// If the association already exists, return it and do nothing
+		const existingForUser = await Repository.companies_user.listByUser(
+			dto.user_id,
+		);
+		const alreadyLinked = existingForUser.find(
+			(r) => r.company_id === dto.company_id,
+		);
+
+		if (alreadyLinked) {
+			throw new BadRequestError("User already linked to company");
+		}
+
 		const created = await Repository.companies_user.create(dto);
 		return created;
 	}

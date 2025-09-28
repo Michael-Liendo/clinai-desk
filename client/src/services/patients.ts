@@ -1,10 +1,10 @@
 import {
-	PatientSchema,
+	type IPaginationRequest,
 	type IPatient,
 	type IPatientForCreate,
 	type IPatientForUpdate,
-	type IPaginationRequest,
 	type ISResponse,
+	PatientSchema,
 } from "@clinai/shared";
 import fetch from "../utils/fetch";
 

@@ -1,15 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useCompanyContext } from "@/context/CompanyContext";
-import Services from "@/services";
 import type { IPatient } from "@clinai/shared";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useCompanyContext } from "@/context/CompanyContext";
+import Services from "@/services";
 
 export default function PatientDetailsPage() {
 	const { id } = useParams<{ id: string }>();
 	const { activeCompany } = useCompanyContext();
 
-	const { data, isLoading, error } = useQuery<{ patient?: IPatient } | undefined>({
+	const { data, isLoading, error } = useQuery<
+		{ patient?: IPatient } | undefined
+	>({
 		queryKey: ["patient", id],
 		queryFn: async () => {
 			if (!id) return { patient: undefined };
@@ -67,10 +69,14 @@ export default function PatientDetailsPage() {
 							<p className="font-medium">{data.patient.address ?? "-"}</p>
 						</div>
 						<div>
-							<p className="text-sm text-muted-foreground">Fecha de nacimiento</p>
+							<p className="text-sm text-muted-foreground">
+								Fecha de nacimiento
+							</p>
 							<p className="font-medium">
 								{data.patient.date_of_birth
-									? new Date(data.patient.date_of_birth).toLocaleDateString("es-ES")
+									? new Date(data.patient.date_of_birth).toLocaleDateString(
+											"es-ES",
+										)
 									: "-"}
 							</p>
 						</div>

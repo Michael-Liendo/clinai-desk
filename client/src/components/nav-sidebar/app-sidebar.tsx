@@ -1,4 +1,4 @@
-import { HomeIcon, MenuIcon, XIcon, UsersIcon } from "lucide-react";
+import { HomeIcon, MenuIcon, UsersIcon, XIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
 	Sidebar,
