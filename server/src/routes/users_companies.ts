@@ -1,16 +1,6 @@
-import {
-	CompanyUserForRegisterSchema,
-	CompanyUserForUpdateSchema,
-} from "@clinai/shared";
+import { CompanyUserForRegisterSchema, CompanyUserForUpdateSchema } from "@clinai/shared";
 import type { FastifyInstance, RegisterOptions } from "fastify";
-import {
-	create,
-	getByUser,
-	getOne,
-	listByCompany,
-	remove,
-	update,
-} from "../controllers/companies_user";
+import { create, getByUser, getOne, listByCompany, listByUser, remove, update } from "../controllers/companies_user";
 import requestValidation from "../utils/requestValidation";
 
 export default function companiesUser(
@@ -28,6 +18,12 @@ export default function companiesUser(
 		method: "GET",
 		url: "/by-user/:user_id",
 		handler: getByUser,
+	});
+
+	fastify.route({
+		method: "GET",
+		url: "/list-by-user/:user_id",
+		handler: listByUser,
 	});
 
 	fastify.route({

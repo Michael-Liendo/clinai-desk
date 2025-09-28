@@ -34,6 +34,13 @@ export class UserService {
 		return UserSchema.parse(response.data);
 	}
 
+	static async getOne(id: string) {
+		const request = await fetch(`/users/${id}`);
+		const response: ISResponse<IUser | undefined> = await request.json();
+		if (response.success === false) throw new Error("Error fetching user");
+		return response.data ? UserSchema.parse(response.data) : undefined;
+	}
+
 	static async find(
 		{ username }: { username?: string },
 		pagination?: IPaginationRequest,

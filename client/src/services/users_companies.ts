@@ -23,6 +23,13 @@ export class UsersCompaniesService {
 		return response.data ? CompanyUserSchema.parse(response.data) : undefined;
 	}
 
+	static async listByUser(user_id: string) {
+		const request = await fetch(`/users-companies/list-by-user/${user_id}`);
+		const response: ISResponse<ICompanyUser[]> = await request.json();
+		if (response.success === false) throw new Error("Error listing by user");
+		return CompanyUserSchema.array().parse(response.data);
+	}
+
 	static async listByCompany(company_id: string) {
 		const request = await fetch(`/users-companies/by-company/${company_id}`);
 		const response: ISResponse<ICompanyUser[]> = await request.json();

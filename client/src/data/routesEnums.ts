@@ -7,4 +7,5 @@ export enum AuthRoutesEnum {
 
 export enum PrivateRoutesEnum {
 	Home = "/",
+	CompanyDetails = "/companies/:id",
 }

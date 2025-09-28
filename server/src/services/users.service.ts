@@ -1,11 +1,15 @@
 import type { IUser, IUserForRegister, IUserForUpdate } from "@clinai/shared";
 import Repository from "../repository";
-import { BadRequestError } from "../utils/errorHandler";
+import { BadRequestError, NotFoundError } from "../utils/errorHandler";
 import { hashPassword } from "../utils/password";
 
 export default class Users {
 	static async getByID(userID: string): Promise<IUser | undefined> {
 		const user = await Repository.users.getUserByID(userID);
+
+		if (!user) {
+			throw new NotFoundError("User not found");
+		}
 
 		return user;
 	}

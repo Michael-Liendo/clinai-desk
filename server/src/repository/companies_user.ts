@@ -32,6 +32,13 @@ export class CompaniesUser {
 	}
 
 	/**
+	 * listByUser - list all relations for a user
+	 */
+	static async listByUser(user_id: string): Promise<ICompanyUser[]> {
+		return database<ICompanyUser>("companies_user").where({ user_id });
+	}
+
+	/**
 	 * listByCompany - list all relations for a company
 	 */
 	static async listByCompany(company_id: string): Promise<ICompanyUser[]> {

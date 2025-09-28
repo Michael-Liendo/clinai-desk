@@ -16,6 +16,11 @@ export default class CompaniesUserService {
 		return row;
 	}
 
+	static async listByUser(user_id: string): Promise<ICompanyUser[]> {
+		const rows = await Repository.companies_user.listByUser(user_id);
+		return rows;
+	}
+
 	static async listByCompany(company_id: string): Promise<ICompanyUser[]> {
 		const rows = await Repository.companies_user.listByCompany(company_id);
 		return rows;

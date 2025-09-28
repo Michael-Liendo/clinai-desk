@@ -1,19 +1,4 @@
-import {
-	Award,
-	Book,
-	BotIcon,
-	BoxesIcon,
-	BrickWallIcon,
-	Cog,
-	DollarSign,
-	FactoryIcon,
-	MenuIcon,
-	NotebookPen,
-	Shield,
-	TicketIcon,
-	Users,
-	XIcon,
-} from "lucide-react";
+import { MenuIcon, XIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
 	Sidebar,
@@ -29,8 +14,9 @@ import {
 	SidebarRail,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { PrivateRoutesEnum } from "@/data/routesEnums";
+import type { PrivateRoutesEnum } from "@/data/routesEnums";
 import { useIsMobile } from "@/features/ui";
+import { CompanySwitcher } from "./company-switcher";
 import { NavUser } from "./nav-user";
 
 type NavItem = {
@@ -42,90 +28,7 @@ type NavItem = {
 	>;
 };
 
-const navMain: { title: string; items: NavItem[] }[] = [
-	{
-		title: "Datos",
-		items: [
-			{
-				title: "Clientes",
-				url: PrivateRoutesEnum.Customers,
-				icon: Users,
-			},
-			{
-				title: "Pagos",
-				url: PrivateRoutesEnum.Payments,
-				icon: DollarSign,
-			},
-			{
-				title: "Tickets",
-				url: PrivateRoutesEnum.Tickets,
-				icon: TicketIcon,
-			},
-		],
-	},
-	{
-		title: "Reportes",
-		items: [
-			{
-				title: "Subir referencias",
-				icon: BrickWallIcon,
-				url: PrivateRoutesEnum.Validate,
-			},
-
-			{
-				title: "Resultados",
-				url: PrivateRoutesEnum.Results,
-				icon: Book,
-			},
-			{
-				title: "Ganadores",
-				url: PrivateRoutesEnum.Winners,
-				icon: Award,
-			},
-			{
-				title: "Reportes",
-				url: PrivateRoutesEnum.Reports,
-				icon: NotebookPen,
-			},
-		],
-	},
-
-	{
-		title: "Configuración",
-		items: [
-			{
-				title: "Usuarios",
-				url: PrivateRoutesEnum.Users,
-				icon: Shield,
-			},
-			{
-				title: "Grupos",
-				url: PrivateRoutesEnum.WhatsappGroups,
-				icon: BoxesIcon,
-			},
-			{
-				title: "Bots",
-				url: PrivateRoutesEnum.WhatsappBots,
-				icon: BotIcon,
-			},
-			{
-				title: "Loterías",
-				url: PrivateRoutesEnum.Lotteries,
-				icon: DollarSign,
-			},
-			{
-				title: "Agencias",
-				url: PrivateRoutesEnum.Agency,
-				icon: FactoryIcon,
-			},
-			{
-				title: "Configuración",
-				url: PrivateRoutesEnum.Config,
-				icon: Cog,
-			},
-		],
-	},
-];
+const navMain: { title: string; items: NavItem[] }[] = [];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { pathname } = useLocation();
@@ -150,7 +53,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			)}
 
 			<Sidebar collapsible="icon" {...props}>
-				<SidebarHeader />
+				<SidebarHeader>
+					<CompanySwitcher />
+				</SidebarHeader>
 				<SidebarContent>
 					{navMain.map((item) => (
 						<SidebarGroup key={item.title}>
