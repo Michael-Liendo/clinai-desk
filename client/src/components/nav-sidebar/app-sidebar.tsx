@@ -28,12 +28,11 @@ type NavItem = {
 	>;
 };
 
-const navMain: { title: string; items: NavItem[] }[] = [
+const navMain: { title?: string; items: NavItem[] }[] = [
 	{
-		title: "Principal",
 		items: [
 			{
-				title: "Home",
+				title: "Inicio",
 				url: PrivateRoutesEnum.Home,
 				icon: HomeIcon,
 			},
@@ -68,9 +67,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					<CompanySwitcher />
 				</SidebarHeader>
 				<SidebarContent>
-					{navMain.map((item) => (
-						<SidebarGroup key={item.title}>
-							<SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+					{navMain.map((item, idx) => (
+						<SidebarGroup key={item.title ?? idx}>
+							{item.title && (
+								<SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+							)}
 							<SidebarGroupContent>
 								<SidebarMenu>
 									{item.items.map((i) => (
