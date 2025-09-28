@@ -33,11 +33,18 @@ export function UserModalMutate({
 	setOpen,
 	companyId,
 	onCreated,
+	isEdit,
+	user,
+	onUpdated,
 }: {
 	open: boolean;
 	setOpen: (open: boolean) => void;
-	companyId: string;
+	companyId?: string; // optional when editing
 	onCreated?: (user: IUser) => void;
+	// edit mode
+	isEdit?: boolean;
+	user?: IUser;
+	onUpdated?: (user: IUser) => void;
 }) {
 	const { toast } = useToast();
 
@@ -50,47 +57,70 @@ export function UserModalMutate({
 		resetForm,
 	} = useFormik({
 		initialValues: {
-			first_name: "",
-			last_name: "",
-			email: "",
+			first_name: isEdit ? (user?.first_name ?? "") : "",
+			last_name: isEdit ? (user?.last_name ?? "") : "",
+			email: isEdit ? (user?.email ?? "") : "",
+			phone: isEdit ? ((user as any)?.phone ?? "") : "",
 			password: "",
 			role: "doctor" as TCompanyUserRole,
 		},
 		validationSchema: toFormikValidationSchema(UserForRegisterSchema),
 		validateOnChange: false,
 		validateOnBlur: false,
+		enableReinitialize: true,
 		onSubmit: async (vals) => {
 			try {
-				// Try to register a new user first
+				if (isEdit) {
+					if (!user?.id) throw new Error("Usuario inválido");
+					const ok = await Services.users.update({
+						id: user.id,
+						first_name: vals.first_name,
+						last_name: vals.last_name,
+						email: vals.email,
+						phone: vals.phone || undefined,
+						password: vals.password || undefined,
+					} as any);
+					if (!ok) throw new Error("No se pudo actualizar el usuario");
+					toast({ title: "Perfil actualizado" });
+					onUpdated?.({ ...(user as IUser), ...vals } as IUser);
+					resetForm();
+					setOpen(false);
+					return;
+				}
+
+				// Create & link flow
 				const registerRes = await Services.auth.register({
 					first_name: vals.first_name,
 					last_name: vals.last_name,
 					email: vals.email,
 					password: vals.password,
 				});
-				const user = registerRes?.data?.user as IUser | undefined;
-				if (!user) throw new Error("No se pudo crear el usuario");
+				const created = registerRes?.data?.user as IUser | undefined;
+				if (!created) throw new Error("No se pudo crear el usuario");
 
-				// Link to company with role
+				if (!companyId)
+					throw new Error("companyId requerido para crear usuario");
+
 				await Services.users_companies.create({
 					company_id: companyId,
-					user_id: user.id,
+					user_id: created.id,
 					role: vals.role,
 				});
 
 				toast({ title: "Usuario agregado a la clínica" });
-				onCreated?.(user);
+				onCreated?.(created);
 				resetForm();
 				setOpen(false);
 			} catch (e: any) {
 				console.error(e);
 				const errCode = e?.errors?.[0]?.code as string | undefined;
-				// If the email is already registered, fetch existing user and link to company
-				if (errCode === "EMAIL_ALREADY_EXISTS") {
+				if (!isEdit && errCode === "EMAIL_ALREADY_EXISTS") {
 					try {
 						const existing = await Services.users.getByEmail(vals.email);
 						if (!existing)
 							throw new Error("No se encontró el usuario existente");
+						if (!companyId)
+							throw new Error("companyId requerido para vincular");
 						await Services.users_companies.create({
 							company_id: companyId,
 							user_id: existing.id,
@@ -114,7 +144,9 @@ export function UserModalMutate({
 				const description =
 					e?.errors?.[0]?.message || e?.message || "Error inesperado";
 				toast({
-					title: "Error al crear el usuario",
+					title: isEdit
+						? "Error al actualizar el usuario"
+						: "Error al crear el usuario",
 					description,
 					variant: "error",
 				});
@@ -130,11 +162,15 @@ export function UserModalMutate({
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogContent className="sm:max-w-[480px]">
+			<DialogContent className="sm:max-w-[520px]">
 				<DialogHeader>
-					<DialogTitle>Agregar usuario a la clínica</DialogTitle>
+					<DialogTitle>
+						{isEdit ? "Editar usuario" : "Agregar usuario a la clínica"}
+					</DialogTitle>
 					<DialogDescription>
-						Crea un usuario y asígnalo a esta clínica con un rol.
+						{isEdit
+							? "Actualiza la información del usuario."
+							: "Crea un usuario y asígnalo a esta clínica con un rol."}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -176,42 +212,52 @@ export function UserModalMutate({
 					/>
 
 					<TextField
-						label="Contraseña"
+						label="Teléfono"
+						name="phone"
+						placeholder="Número de teléfono"
+						value={(values as any).phone}
+						onChange={handleChange}
+					/>
+
+					<TextField
+						label={isEdit ? "Nueva contraseña" : "Contraseña"}
 						name="password"
 						type="password"
-						placeholder="* * * * * * *"
+						placeholder={isEdit ? "••••••••" : "* * * * * * *"}
 						value={values.password}
 						error={errors.password as string}
 						onChange={handleChange}
-						required
+						required={!isEdit}
 					/>
 
-					<div className="space-y-1">
-						<div className="text-sm font-medium">Rol</div>
-						<Select
-							value={values.role}
-							onValueChange={(v) =>
-								setFieldValue("role", v as TCompanyUserRole)
-							}
-						>
-							<SelectTrigger>
-								<SelectValue placeholder="Selecciona un rol" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectGroup>
-									<SelectLabel>Roles</SelectLabel>
-									<SelectItem value="admin">Administrador</SelectItem>
-									<SelectItem value="doctor">Médico</SelectItem>
-									<SelectItem value="assistant">Asistente</SelectItem>
-								</SelectGroup>
-							</SelectContent>
-						</Select>
-					</div>
+					{!isEdit && (
+						<div className="space-y-1">
+							<div className="text-sm font-medium">Rol</div>
+							<Select
+								value={values.role}
+								onValueChange={(v) =>
+									setFieldValue("role", v as TCompanyUserRole)
+								}
+							>
+								<SelectTrigger>
+									<SelectValue placeholder="Selecciona un rol" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										<SelectLabel>Roles</SelectLabel>
+										<SelectItem value="admin">Administrador</SelectItem>
+										<SelectItem value="doctor">Médico</SelectItem>
+										<SelectItem value="assistant">Asistente</SelectItem>
+									</SelectGroup>
+								</SelectContent>
+							</Select>
+						</div>
+					)}
 				</form>
 
 				<DialogFooter>
 					<Button form="create-company-user" type="submit">
-						Crear usuario
+						{isEdit ? "Guardar cambios" : "Crear usuario"}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

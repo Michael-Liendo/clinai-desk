@@ -1,6 +1,7 @@
-import { IconDotsVertical } from "@tabler/icons-react";
+import { IconDotsVertical, IconEdit } from "@tabler/icons-react";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -9,6 +10,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserModalMutate } from "@/components/entity/user/modal";
 import {
 	SidebarMenu,
 	SidebarMenuButton,
@@ -22,6 +24,11 @@ export function NavUser() {
 	const { isMobile } = useSidebar();
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
+
+	const [editOpen, setEditOpen] = useState(false);
+	function openEditModal() {
+		setEditOpen(true);
+	}
 	function handleLogout() {
 		logout();
 
@@ -78,12 +85,24 @@ export function NavUser() {
 							</div>
 						</DropdownMenuLabel>
 
+						<DropdownMenuItem onClick={openEditModal}>
+							<IconEdit className="size-4 mr-1" />
+							Editar cuenta
+						</DropdownMenuItem>
+
 						<DropdownMenuItem onClick={() => handleLogout()}>
 							<LogOut className="size-4 mr-1" />
 							Cerrar sesión
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
+
+				<UserModalMutate
+					open={editOpen}
+					setOpen={setEditOpen}
+					isEdit
+					user={user}
+				/>
 			</SidebarMenuItem>
 		</SidebarMenu>
 	);
