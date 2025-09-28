@@ -43,7 +43,9 @@ export function NavUser() {
 								</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-medium">{user?.first_name}</span>
+								<span className="truncate font-medium">
+									{user?.first_name} {user?.last_name}
+								</span>
 								<span className="text-muted-foreground truncate text-xs">
 									{user?.email}
 								</span>
