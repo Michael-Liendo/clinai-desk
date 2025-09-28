@@ -2,8 +2,8 @@ import type { FastifyInstance, RegisterOptions } from "fastify";
 import type { ErrorWithDetails } from "../utils/errorHandler";
 import admin from "./admin";
 import auth from "./auth";
-import user from "./user";
 import companies from "./companies";
+import user from "./user";
 import companiesUser from "./users_companies";
 
 export default function routes(

@@ -29,7 +29,7 @@ export const CompanyForUpdateSchema = CompanySchema.omit({
 export interface ICompany extends z.infer<typeof CompanySchema> {}
 
 export interface ICompanyForRegister
-  extends z.infer<typeof CompanyForRegisterSchema> {}
+	extends z.infer<typeof CompanyForRegisterSchema> {}
 
 export interface ICompanyForUpdate
-  extends z.infer<typeof CompanyForUpdateSchema> {}
+	extends z.infer<typeof CompanyForUpdateSchema> {}

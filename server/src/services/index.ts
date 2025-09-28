@@ -1,7 +1,7 @@
 import AdminService from "./admin.service";
 import Auth from "./auth.service";
-import Users from "./users.service";
 import Companies from "./companies.service";
+import Users from "./users.service";
 import CompaniesUser from "./users_companies.service";
 
 export default class Services {

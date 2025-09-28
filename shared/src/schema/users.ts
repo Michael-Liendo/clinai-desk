@@ -36,13 +36,14 @@ export const UserForUpdateSchema = UserSchema.omit({
 // Inferred Types/Interfaces
 export interface IUser extends z.infer<typeof UserSchema> {}
 
-export interface IUserForRegister extends z.infer<typeof UserForRegisterSchema> {}
+export interface IUserForRegister
+	extends z.infer<typeof UserForRegisterSchema> {}
 
 export interface IUserForLogin extends z.infer<typeof UserLoginSchema> {}
 
 export interface IUserForUpdate extends z.infer<typeof UserForUpdateSchema> {}
 
 export interface ILoggedInUser {
-  token: string;
-  user: IUser;
+	token: string;
+	user: IUser;
 }

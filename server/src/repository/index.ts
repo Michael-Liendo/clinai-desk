@@ -1,7 +1,7 @@
 import { AdminRepository } from "./admin";
-import { Users } from "./users";
 import { Companies } from "./companies";
 import { CompaniesUser } from "./companies_user";
+import { Users } from "./users";
 
 export default class Repository {
 	static users = Users;
