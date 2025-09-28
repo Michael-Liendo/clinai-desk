@@ -1,6 +1,17 @@
-import { CompanyUserForRegisterSchema, CompanyUserForUpdateSchema } from "@clinai/shared";
+import {
+	CompanyUserForRegisterSchema,
+	CompanyUserForUpdateSchema,
+} from "@clinai/shared";
 import type { FastifyInstance, RegisterOptions } from "fastify";
-import { create, getByUser, getOne, listByCompany, listByUser, remove, update } from "../controllers/companies_user";
+import {
+	create,
+	getByUser,
+	getOne,
+	listByCompany,
+	listByUser,
+	remove,
+	update,
+} from "../controllers/companies_user";
 import requestValidation from "../utils/requestValidation";
 
 export default function companiesUser(

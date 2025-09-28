@@ -41,6 +41,16 @@ export class UserService {
 		return response.data ? UserSchema.parse(response.data) : undefined;
 	}
 
+	static async getByEmail(email: string) {
+		const request = await fetch(
+			`/users/by-email?email=${encodeURIComponent(email)}`,
+		);
+		const response: ISResponse<IUser | undefined> = await request.json();
+		if (response.success === false)
+			throw new Error("Error fetching user by email");
+		return response.data ? UserSchema.parse(response.data) : undefined;
+	}
+
 	static async find(
 		{ username }: { username?: string },
 		pagination?: IPaginationRequest,

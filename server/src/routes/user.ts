@@ -1,6 +1,12 @@
 import { UserForUpdateSchema } from "@clinai/shared";
 import type { FastifyInstance, RegisterOptions } from "fastify";
-import { deleteUser, getOne, me, update } from "../controllers/users";
+import {
+	deleteUser,
+	getByEmail,
+	getOne,
+	me,
+	update,
+} from "../controllers/users";
 import { checkUser } from "../middlewares/checkUser";
 import requestValidation from "../utils/requestValidation";
 
@@ -15,6 +21,12 @@ export default function user(
 		method: "GET",
 		url: "/me",
 		handler: me,
+	});
+
+	fastify.route({
+		method: "GET",
+		url: "/by-email",
+		handler: getByEmail,
 	});
 
 	fastify.route({

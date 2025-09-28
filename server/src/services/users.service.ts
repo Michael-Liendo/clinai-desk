@@ -6,11 +6,17 @@ import { hashPassword } from "../utils/password";
 export default class Users {
 	static async getByID(userID: string): Promise<IUser | undefined> {
 		const user = await Repository.users.getUserByID(userID);
-
 		if (!user) {
 			throw new NotFoundError("User not found");
 		}
+		return user;
+	}
 
+	static async getByEmail(email: string): Promise<IUser> {
+		const user = await Repository.users.getUserByEmail(email);
+		if (!user) {
+			throw new NotFoundError("User not found");
+		}
 		return user;
 	}
 

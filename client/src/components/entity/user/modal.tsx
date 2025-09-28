@@ -61,7 +61,7 @@ export function UserModalMutate({
 		validateOnBlur: false,
 		onSubmit: async (vals) => {
 			try {
-				// 1) Create user (do not set token here)
+				// Try to register a new user first
 				const registerRes = await Services.auth.register({
 					first_name: vals.first_name,
 					last_name: vals.last_name,
@@ -71,7 +71,7 @@ export function UserModalMutate({
 				const user = registerRes?.data?.user as IUser | undefined;
 				if (!user) throw new Error("No se pudo crear el usuario");
 
-				// 2) Link to company with role
+				// Link to company with role
 				await Services.users_companies.create({
 					company_id: companyId,
 					user_id: user.id,
@@ -82,11 +82,41 @@ export function UserModalMutate({
 				onCreated?.(user);
 				resetForm();
 				setOpen(false);
-			} catch (e) {
+			} catch (e: any) {
 				console.error(e);
+				const errCode = e?.errors?.[0]?.code as string | undefined;
+				// If the email is already registered, fetch existing user and link to company
+				if (errCode === "EMAIL_ALREADY_EXISTS") {
+					try {
+						const existing = await Services.users.getByEmail(vals.email);
+						if (!existing)
+							throw new Error("No se encontró el usuario existente");
+						await Services.users_companies.create({
+							company_id: companyId,
+							user_id: existing.id,
+							role: vals.role,
+						});
+						toast({ title: "Usuario agregado a la clínica" });
+						onCreated?.(existing);
+						resetForm();
+						setOpen(false);
+						return;
+					} catch (linkErr) {
+						console.error(linkErr);
+						toast({
+							title: "No se pudo vincular el usuario existente",
+							variant: "error",
+						});
+						return;
+					}
+				}
+
+				const description =
+					e?.errors?.[0]?.message || e?.message || "Error inesperado";
 				toast({
 					title: "Error al crear el usuario",
-					description: String(e.errors[0].message as string),
+					description,
+					variant: "error",
 				});
 			}
 		},
