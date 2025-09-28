@@ -8,11 +8,11 @@ import {
 } from "react-router-dom";
 import { useAuth } from "@/features/auth";
 import AppLayout from "./components/app-layout";
-import { LoadingFullScreen } from "./components/loading";
 import { AuthRoutesEnum, PrivateRoutesEnum } from "./data/routesEnums";
 import Home from "./pages/(app)/home";
 import Login from "./pages/(auth)/Login";
 import Register from "./pages/(auth)/Register";
+import { LoadingFullScreen } from "./components/loading";
 
 const PrivateRoutesWrapper = () => {
 	const { token, authInitialized } = useAuth();
@@ -44,6 +44,10 @@ export function Routes() {
 					{AuthRoutes.map((route) => route)}
 				</Route>
 				{PublicRoutes.map((route) => route)}
+				<Route
+					path="*"
+					element={<Navigate to={PrivateRoutesEnum.Home} replace />}
+				/>
 			</ReactRoutes>
 		</Router>
 	);
@@ -52,23 +56,22 @@ export function Routes() {
 const PrivateRoutes: JSX.Element[] = [
 	<Route
 		key={PrivateRoutesEnum.Home}
+		path={PrivateRoutesEnum.Home}
 		Component={Home}
 	/>,
 ];
 
 const AuthRoutes: JSX.Element[] = [
-    <Route
-        key={AuthRoutesEnum.Login}
-        path={AuthRoutesEnum.Login}
-        Component={Login}
-    />,
-    <Route
-        key={AuthRoutesEnum.Register}
-        path={AuthRoutesEnum.Register}
-        Component={Register}
-    />,
+	<Route
+		key={AuthRoutesEnum.Login}
+		path={AuthRoutesEnum.Login}
+		Component={Login}
+	/>,
+	<Route
+		key={AuthRoutesEnum.Register}
+		path={AuthRoutesEnum.Register}
+		Component={Register}
+	/>,
 ];
 
-const PublicRoutes: JSX.Element[] = [
-	<Route key={"no-found"} path={"*"} Component={() => <>No Found</>} />,
-];
+const PublicRoutes: JSX.Element[] = [];

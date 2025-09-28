@@ -26,26 +26,6 @@ export const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
 		setLoaded(true);
 	}, []);
 
-	const { data: user, isLoading } = useQuery({
-		queryKey: ["user", token],
-		queryFn: async () => {
-			if (!token) return undefined;
-
-			try {
-				const user = await Services.users.me();
-				return user;
-				// biome-ignore lint: no know the type
-			} catch (error: any) {
-				if (error.error === "UNAUTHORIZED") {
-					logout();
-				}
-			}
-		},
-		enabled: !!token,
-		staleTime: 5 * 60 * 1000,
-		retry: false,
-	});
-
 	const updateToken = async (token: string) => {
 		await localStorage.setItem("token", token);
 		setToken(token);
@@ -56,12 +36,34 @@ export const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
 		setToken(undefined);
 	};
 
+	const { data: userData, isLoading } = useQuery<IUser | null, Error>({
+		queryKey: ["user", token],
+		queryFn: async () => {
+			if (!token) return null;
+			try {
+				const user = await Services.users.me();
+				console.log(user);
+				return user;
+				// biome-ignore lint: no know the type
+			} catch (error: any) {
+				if (error?.error === "UNAUTHORIZED") {
+					await logout();
+					return null;
+				}
+				throw error;
+			}
+		},
+		enabled: !!token,
+		staleTime: 5 * 60 * 1000,
+		retry: false,
+	});
+
 	return (
 		<AuthContext.Provider
 			value={{
 				isLoading,
 				authInitialized: loaded && (!token || !isLoading),
-				user,
+				user: userData ?? undefined,
 				token: token ?? undefined,
 				setToken: updateToken,
 				logout,

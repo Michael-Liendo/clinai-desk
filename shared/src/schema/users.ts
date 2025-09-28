@@ -6,7 +6,7 @@ export const UserSchema = z.object({
 	first_name: z.string(),
 	last_name: z.string(),
 	email: z.string().email().describe("unique"),
-	phone: z.string().optional(),
+	phone: z.string().nullable().optional(),
 	password: z.string().optional(),
 	created_at: z.coerce.date(),
 	updated_at: z.coerce.date(),
@@ -32,7 +32,6 @@ export const UserForUpdateSchema = UserSchema.omit({
 	created_at: true,
 	updated_at: true,
 });
-
 // Inferred Types/Interfaces
 export interface IUser extends z.infer<typeof UserSchema> {}
 

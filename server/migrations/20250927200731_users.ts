@@ -4,6 +4,7 @@ import type { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
 	await knex.schema.createTable(MasterNameEnum.Values.users, (table) => {
 		table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
+		table.boolean("is_active").notNullable().defaultTo(true);
 		table.string("first_name").notNullable();
 		table.string("last_name").notNullable();
 		table.string("email").notNullable().unique();

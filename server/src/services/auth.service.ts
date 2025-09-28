@@ -65,7 +65,7 @@ export default class Auth {
 			...userToRegister,
 		});
 
-		const token = await Auth.login({
+		const { token } = await Auth.login({
 			email: data.email,
 			password: data.password,
 		});
