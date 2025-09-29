@@ -5,6 +5,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCompanyContext } from "@/context/CompanyContext";
 import Services from "@/services";
 
+// Función para traducir géneros
+function translateGender(gender: string | null | undefined): string {
+	if (!gender) return "-";
+	
+	const translations: Record<string, string> = {
+		male: "Masculino",
+		female: "Femenino", 
+		other: "Otro"
+	};
+	
+	return translations[gender] || gender;
+}
+
 export default function PatientDetailsPage() {
 	const { id } = useParams<{ id: string }>();
 	const { activeCompany } = useCompanyContext();
@@ -82,7 +95,7 @@ export default function PatientDetailsPage() {
 						</div>
 						<div>
 							<p className="text-sm text-muted-foreground">Género</p>
-							<p className="font-medium">{data.patient.gender ?? "-"}</p>
+							<p className="font-medium">{translateGender(data.patient.gender)}</p>
 						</div>
 						<div className="md:col-span-2">
 							<p className="text-sm text-muted-foreground">Notas</p>
