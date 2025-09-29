@@ -56,12 +56,11 @@ export function DataTable<TData, TValue>({
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [sorting, setSorting] = useState<SortingState>([]);
-
 	const table = useReactTable({
 		data: data ?? [],
 		columns,
 		pageCount: pagination
-			? Math.ceil(pagination?.total / pagination?.limit)
+			? Math.ceil(pagination.total / pagination.limit)
 			: undefined,
 		state: {
 			sorting,
@@ -69,7 +68,7 @@ export function DataTable<TData, TValue>({
 			rowSelection,
 			columnFilters,
 			pagination: {
-				pageIndex: pagination ? pagination.page : 0,
+				pageIndex: pagination ? pagination.page - 1 : 0, // Convert 1-based to 0-based
 				pageSize: pagination ? pagination.limit : 10,
 			},
 		},
@@ -83,18 +82,17 @@ export function DataTable<TData, TValue>({
 				if (typeof newPagination === "function") {
 					onPageChange?.(
 						newPagination({
-							pageIndex: pagination.page,
+							pageIndex: pagination.page - 1, // Convert 1-based to 0-based
 							pageSize: pagination.limit,
-						}).pageIndex,
+						}).pageIndex + 1, // Convert back to 1-based
 					);
 				} else {
-					onPageChange?.(newPagination.pageIndex);
+					onPageChange?.(newPagination.pageIndex + 1); // Convert back to 1-based
 				}
 			}
 		},
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		getFacetedRowModel: getFacetedRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),

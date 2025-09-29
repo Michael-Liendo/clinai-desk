@@ -20,7 +20,7 @@ export default function PatientsPage() {
 	const { activeCompany } = useCompanyContext();
 
 	const [pagination, setPagination] = useState<IPaginationResponse>({
-		page: 0,
+		page: 1,
 		limit: 50,
 		hasNextPage: false,
 		hasPreviousPage: false,

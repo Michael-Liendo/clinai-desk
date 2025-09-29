@@ -40,10 +40,10 @@ export class Patients {
 			database<IPatient>("patients")
 				.where({ company_id: companyId, is_active: true })
 				.count("* as count")
-				.first(),
+				.first() as unknown as Promise<{ count: number }>,
 		]);
 
-		const count = Number(countResult || 0);
+		const count = Number(countResult.count || 0);
 		return { data, count };
 	}
 
@@ -86,10 +86,12 @@ export class Patients {
 				.orderBy("created_at", "desc")
 				.limit(limit)
 				.offset(offset),
-			baseQuery.clone().count("* as count").first(),
+			baseQuery.clone().count("* as count").first() as unknown as Promise<{
+				count: number;
+			}>,
 		]);
 
-		const count = Number(countResult || 0);
+		const count = Number(countResult.count || 0);
 		return { data, count };
 	}
 
