@@ -1,10 +1,12 @@
 import type { IPatient } from "@clinai/shared";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { InfoCard, InfoItem } from "@/components/ui/info-card";
+import { EditPatientModal } from "@/components/entity/patient/edit-modal";
 import { Edit } from "lucide-react";
 import { useCompanyContext } from "@/context/CompanyContext";
 import Services from "@/services";
@@ -56,6 +58,34 @@ function getInitials(
 export default function PatientDetailsPage() {
 	const { id } = useParams<{ id: string }>();
 	const { activeCompany } = useCompanyContext();
+	const queryClient = useQueryClient();
+
+	// Estado para el modal de edición
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	const [focusSection, setFocusSection] = useState<
+		"basic" | "contact" | "notes" | "medical"
+	>("basic");
+
+	// Función para abrir el modal con focus en una sección específica
+	const openEditModal = (
+		section: "basic" | "contact" | "notes" | "medical",
+	) => {
+		setFocusSection(section);
+		setIsEditModalOpen(true);
+	};
+
+	// Función para guardar los cambios del paciente
+	const handleSavePatient = async (updatedData: Partial<IPatient>) => {
+		if (!id) return;
+
+		try {
+			await Services.patients.update(id, updatedData);
+			queryClient.invalidateQueries({ queryKey: ["patient", id] });
+		} catch (error) {
+			console.error("Error al actualizar paciente:", error);
+			throw error;
+		}
+	};
 
 	const { data, isLoading, error } = useQuery<
 		{ patient?: IPatient } | undefined
@@ -144,12 +174,6 @@ export default function PatientDetailsPage() {
 										)}
 									</div>
 								</div>
-								<div className="flex items-center gap-3">
-									<Button variant="outline" size="sm">
-										<Edit className="h-4 w-4 mr-2" />
-										Editar paciente
-									</Button>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -163,7 +187,7 @@ export default function PatientDetailsPage() {
 								<InfoCard
 									title="Información Básica"
 									headerColor="primary"
-									onEdit={() => console.log("Editar información básica")}
+									onEdit={() => openEditModal("basic")}
 								>
 									<div className="space-y-5">
 										<InfoItem
@@ -174,6 +198,9 @@ export default function PatientDetailsPage() {
 													: "-"
 											}
 										/>
+										{data.patient.dni && (
+											<InfoItem label="DNI" value={data.patient.dni} />
+										)}
 										<InfoItem
 											label="Sexo"
 											value={translateGender(data.patient.gender)}
@@ -194,18 +221,23 @@ export default function PatientDetailsPage() {
 								<InfoCard
 									title="Antecedentes"
 									headerColor="orange"
-									onEdit={() => console.log("Editar antecedentes")}
+									onEdit={() => openEditModal("medical")}
 								>
 									<div className="space-y-5">
 										<InfoItem
 											label="Alergias"
-											value="Sin alergias"
+											value={data.patient.medical_info?.allergies || "-"}
 											valueColor="text-green-600"
 										/>
-										<InfoItem label="Enfermedades" value="-" />
+										<InfoItem
+											label="Enfermedades"
+											value={data.patient.medical_info?.medical_history || "-"}
+										/>
 										<InfoItem
 											label="Cirugías"
-											value="Sin cirugías"
+											value={
+												data.patient.medical_info?.surgeries_history || "-"
+											}
 											valueColor="text-green-600"
 											isLast
 										/>
@@ -265,7 +297,7 @@ export default function PatientDetailsPage() {
 								<InfoCard
 									title="Datos de contacto"
 									headerColor="green"
-									onEdit={() => console.log("Editar contacto")}
+									onEdit={() => openEditModal("contact")}
 								>
 									<div className="space-y-4">
 										<InfoItem
@@ -281,7 +313,6 @@ export default function PatientDetailsPage() {
 												</span>
 											}
 										/>
-										<InfoItem label="DNI" value={data.patient.dni || "-"} />
 										<InfoItem
 											label="Nacimiento"
 											value={
@@ -309,6 +340,7 @@ export default function PatientDetailsPage() {
 									title="Notas médicas"
 									headerColor="purple"
 									className="pt-0"
+									onEdit={() => openEditModal("notes")}
 								>
 									<div className="min-h-32 p-4 border-2 border-dashed border-border rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
 										<p className="text-sm text-muted-foreground whitespace-pre-wrap">
@@ -320,12 +352,6 @@ export default function PatientDetailsPage() {
 										<p className="text-xs text-muted-foreground">
 											🔒 Solo visible para el médico
 										</p>
-										<Button
-											size="sm"
-											className="bg-purple-600 hover:bg-purple-700"
-										>
-											💾 Guardar
-										</Button>
 									</div>
 								</InfoCard>
 							</div>
@@ -334,6 +360,17 @@ export default function PatientDetailsPage() {
 				</>
 			) : (
 				<p>No se encontró el paciente.</p>
+			)}
+
+			{/* Modal de edición */}
+			{data?.patient && (
+				<EditPatientModal
+					patient={data.patient}
+					isOpen={isEditModalOpen}
+					onClose={() => setIsEditModalOpen(false)}
+					onSave={handleSavePatient}
+					focusSection={focusSection}
+				/>
 			)}
 		</div>
 	);

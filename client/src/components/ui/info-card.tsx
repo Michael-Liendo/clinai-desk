@@ -82,7 +82,7 @@ export function InfoCard({
 					</div>
 				</div>
 			</CardHeader>
-			<CardContent className="pt-6">{children}</CardContent>
+			<CardContent>{children}</CardContent>
 		</Card>
 	);
 }
