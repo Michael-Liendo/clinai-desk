@@ -1,5 +1,6 @@
 import {
 	type IUser,
+	type IUserForUpdate,
 	type TCompanyUserRole,
 	UserForRegisterSchema,
 } from "@clinai/shared";
@@ -79,7 +80,7 @@ export function UserModalMutate({
 						email: vals.email,
 						phone: vals.phone || undefined,
 						password: vals.password || undefined,
-					} as any);
+					} as IUserForUpdate);
 					if (!ok) throw new Error("No se pudo actualizar el usuario");
 					toast({ title: "Perfil actualizado" });
 					onUpdated?.({ ...(user as IUser), ...vals } as IUser);
@@ -111,6 +112,7 @@ export function UserModalMutate({
 				onCreated?.(created);
 				resetForm();
 				setOpen(false);
+				// biome-ignore lint/suspicious/noExplicitAny: 	ignore
 			} catch (e: any) {
 				console.error(e);
 				const errCode = e?.errors?.[0]?.code as string | undefined;

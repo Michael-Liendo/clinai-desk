@@ -142,27 +142,25 @@ export function DataTable<TData, TValue>({
 							table.getRowModel().rows.map((row) => {
 								const rowData = row.original as { id?: string };
 								return (
-									<>
-										<TableRow
-											key={row.id}
-											onClick={() => {
-												handleGoToRoute(rowData.id);
-											}}
-											className={cn({
-												"cursor-pointer": !!route,
-											})}
-											data-state={row.getIsSelected() && "selected"}
-										>
-											{row.getVisibleCells().map((cell) => (
-												<TableCell key={cell.id}>
-													{flexRender(
-														cell.column.columnDef.cell,
-														cell.getContext(),
-													)}
-												</TableCell>
-											))}
-										</TableRow>
-									</>
+									<TableRow
+										key={row.id}
+										onClick={() => {
+											handleGoToRoute(rowData.id);
+										}}
+										className={cn({
+											"cursor-pointer": !!route,
+										})}
+										data-state={row.getIsSelected() && "selected"}
+									>
+										{row.getVisibleCells().map((cell) => (
+											<TableCell key={cell.id}>
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext(),
+												)}
+											</TableCell>
+										))}
+									</TableRow>
 								);
 							})
 						) : (

@@ -1,13 +1,12 @@
 import type { IPatient } from "@clinai/shared";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { EditPatientModal } from "@/components/entity/patient/edit-modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { InfoCard, InfoItem } from "@/components/ui/info-card";
-import { EditPatientModal } from "@/components/entity/patient/edit-modal";
-import { Edit } from "lucide-react";
 import { useCompanyContext } from "@/context/CompanyContext";
 import Services from "@/services";
 
