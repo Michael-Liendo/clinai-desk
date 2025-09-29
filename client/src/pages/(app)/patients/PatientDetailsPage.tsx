@@ -1,7 +1,7 @@
 import type { IPatient } from "@clinai/shared";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { EditPatientModal } from "@/components/entity/patient/edit-modal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { InfoCard, InfoItem } from "@/components/ui/info-card";
 import { useCompanyContext } from "@/context/CompanyContext";
 import Services from "@/services";
+import { useAuth } from "@/features/auth";
 
 // Función para traducir géneros
 function translateGender(gender: string | null | undefined): string {
@@ -57,7 +58,9 @@ function getInitials(
 export default function PatientDetailsPage() {
 	const { id } = useParams<{ id: string }>();
 	const { activeCompany } = useCompanyContext();
+	const { user } = useAuth();
 	const queryClient = useQueryClient();
+	const navigate = useNavigate();
 
 	// Estado para el modal de edición
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -86,6 +89,40 @@ export default function PatientDetailsPage() {
 		}
 	};
 
+	// Función para crear una nueva consulta
+	const handleCreateConsultation = async () => {
+		if (!id || !activeCompany?.id || !data?.patient || !user?.id) return;
+
+		// Verificar si ya hay una consulta abierta
+		if (hasOpenConsultation) {
+			console.warn("Ya existe una consulta abierta para este paciente");
+			return;
+		}
+
+		try {
+			// Crear la consulta con datos básicos
+			const newConsultation = await Services.consultations.create({
+				patient_id: id,
+				user_id: user?.id,
+				company_id: activeCompany.id,
+				reason_for_consultation: "", // Se completará en la página de consulta
+				consultation_date: new Date(),
+				status: "open" as const,
+			});
+
+			// Invalidar las consultas para refrescar la lista
+			queryClient.invalidateQueries({
+				queryKey: ["patient-consultations", id, activeCompany.id],
+			});
+
+			// Navegar a la página de la consulta creada
+			navigate(`/consultations/${newConsultation.id}`);
+		} catch (error) {
+			console.error("Error al crear consulta:", error);
+			// Aquí podrías mostrar un toast o mensaje de error
+		}
+	};
+
 	const { data, isLoading, error } = useQuery<
 		{ patient?: IPatient } | undefined
 	>({
@@ -97,6 +134,26 @@ export default function PatientDetailsPage() {
 		},
 		enabled: !!id,
 	});
+
+	// Fetch de las consultas del paciente
+	const { data: consultationsData, isLoading: isLoadingConsultations } =
+		useQuery({
+			queryKey: ["patient-consultations", id, activeCompany?.id],
+			queryFn: async () => {
+				if (!id || !activeCompany?.id) return { data: [], count: 0 };
+				return await Services.consultations.getByPatient(activeCompany.id, id, {
+					page: 1,
+					limit: 10,
+				});
+			},
+			enabled: !!id && !!activeCompany?.id,
+		});
+
+	// Verificar si hay consultas abiertas
+	const hasOpenConsultation =
+		consultationsData?.data?.some(
+			(consultation) => consultation.status === "open",
+		) || false;
 
 	if (!activeCompany?.id) {
 		return (
@@ -251,42 +308,151 @@ export default function PatientDetailsPage() {
 									title="Consultas recientes"
 									headerColor="blue"
 									badge={
-										<Badge
-											variant="secondary"
-											className="bg-blue-100 text-blue-700 hover:bg-blue-200"
-										>
-											Ver todas
-										</Badge>
+										consultationsData?.data &&
+										consultationsData.data.length > 0 ? (
+											<Badge
+												variant="secondary"
+												className="bg-blue-100 text-blue-700 hover:bg-blue-200"
+											>
+												{consultationsData.data.length} consulta
+												{consultationsData.data.length !== 1 ? "s" : ""}
+											</Badge>
+										) : null
 									}
 								>
-									<div className="text-center py-8">
-										<div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
-											<svg
-												className="w-8 h-8 text-muted-foreground"
-												fill="none"
-												stroke="currentColor"
-												viewBox="0 0 24 24"
-											>
-												<title>Icono de consultas</title>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth={2}
-													d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-												/>
-											</svg>
+									{isLoadingConsultations ? (
+										<div className="text-center py-8">
+											<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mx-auto mb-2" />
+											<p className="text-sm text-muted-foreground">
+												Cargando consultas...
+											</p>
 										</div>
-										<p className="text-sm text-muted-foreground mb-4">
-											No hay consultas registradas
-										</p>
-										<Button
-											variant="outline"
-											size="sm"
-											className="text-primary border-primary hover:bg-primary hover:text-white"
-										>
-											Iniciar consulta
-										</Button>
-									</div>
+									) : consultationsData?.data &&
+										consultationsData.data.length > 0 ? (
+										<div className="space-y-3">
+											{consultationsData.data
+												.slice(0, 3)
+												.map((consultation) => (
+													<button
+														key={consultation.id}
+														type="button"
+														className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted cursor-pointer transition-colors w-full text-left"
+														onClick={() =>
+															navigate(`/consultations/${consultation.id}`)
+														}
+													>
+														<div className="flex-1 min-w-0">
+															<div className="flex items-center gap-2 mb-1">
+																<Badge
+																	variant={
+																		consultation.status === "open"
+																			? "default"
+																			: "secondary"
+																	}
+																	className={
+																		consultation.status === "open"
+																			? "bg-green-100 text-green-700 text-xs"
+																			: "bg-gray-100 text-gray-700 text-xs"
+																	}
+																>
+																	{consultation.status === "open"
+																		? "Abierta"
+																		: "Cerrada"}
+																</Badge>
+																<span className="text-xs text-muted-foreground">
+																	{new Date(
+																		consultation.consultation_date,
+																	).toLocaleDateString("es-ES")}
+																</span>
+															</div>
+															<p className="text-sm font-medium truncate">
+																{consultation.reason_for_consultation ||
+																	"Sin motivo especificado"}
+															</p>
+															{consultation.diagnosis && (
+																<p className="text-xs text-muted-foreground truncate">
+																	{consultation.diagnosis}
+																</p>
+															)}
+														</div>
+														<div className="ml-2">
+															<svg
+																className="w-4 h-4 text-muted-foreground"
+																fill="none"
+																stroke="currentColor"
+																viewBox="0 0 24 24"
+															>
+																<title>Ver consulta</title>
+																<path
+																	strokeLinecap="round"
+																	strokeLinejoin="round"
+																	strokeWidth={2}
+																	d="M9 5l7 7-7 7"
+																/>
+															</svg>
+														</div>
+													</button>
+												))}
+
+											{/* Botón para crear nueva consulta */}
+											<div className="pt-2 border-t">
+												{hasOpenConsultation ? (
+													<div className="text-center py-2">
+														<p className="text-sm text-muted-foreground mb-2">
+															Ya tienes una consulta abierta
+														</p>
+														<Button
+															variant="outline"
+															size="sm"
+															disabled
+															className="opacity-50 cursor-not-allowed"
+														>
+															Consulta en progreso
+														</Button>
+													</div>
+												) : (
+													<Button
+														variant="outline"
+														size="sm"
+														className="w-full text-primary border-primary hover:bg-primary hover:text-white"
+														onClick={handleCreateConsultation}
+													>
+														+ Nueva consulta
+													</Button>
+												)}
+											</div>
+										</div>
+									) : (
+										<div className="text-center py-8">
+											<div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
+												<svg
+													className="w-8 h-8 text-muted-foreground"
+													fill="none"
+													stroke="currentColor"
+													viewBox="0 0 24 24"
+												>
+													<title>Icono de consultas</title>
+													<path
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth={2}
+														d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+													/>
+												</svg>
+											</div>
+											<p className="text-sm text-muted-foreground mb-4">
+												No hay consultas registradas
+											</p>
+											<Button
+												variant="outline"
+												size="sm"
+												className="text-primary border-primary hover:bg-primary hover:text-white"
+												onClick={handleCreateConsultation}
+											>
+												Iniciar consulta
+											</Button>
+										</div>
+									)}
 								</InfoCard>
 							</div>
 
