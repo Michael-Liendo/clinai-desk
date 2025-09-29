@@ -135,7 +135,7 @@ export default function PatientDetailsPage() {
 				<>
 					{/* Header del paciente con avatar, nombre y edad */}
 					<div>
-						<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+						<div className="max-w-10/12 mx-auto px-4 sm:px-6 lg:px-8">
 							<div className="flex items-center gap-6 py-6">
 								<Avatar className="h-20 w-20 ring-4 ring-primary/10">
 									<AvatarImage
@@ -178,7 +178,7 @@ export default function PatientDetailsPage() {
 					</div>
 
 					{/* Contenido principal */}
-					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+					<div className="max-w-10/12 mx-auto px-4 sm:px-6 lg:px-8 py-8">
 						<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 							{/* Columna 1: Información Básica y Antecedentes */}
 							<div className="space-y-6">
@@ -207,7 +207,7 @@ export default function PatientDetailsPage() {
 										<InfoItem
 											label="Ocupación"
 											value={
-												<span className="text-right max-w-[150px] truncate block">
+												<span className="text-right block">
 													{data.patient.occupation || "No especificada"}
 												</span>
 											}
