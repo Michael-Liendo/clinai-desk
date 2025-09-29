@@ -1,6 +1,7 @@
 import AdminService from "./admin.service";
 import Auth from "./auth.service";
 import Companies from "./companies.service";
+import Consultations from "./consultations.service";
 import Patients from "./patients.service";
 import Users from "./users.service";
 import CompaniesUser from "./users_companies.service";
@@ -12,4 +13,5 @@ export default class Services {
 	static companies = Companies;
 	static companies_user = CompaniesUser;
 	static patients = Patients;
+	static consultations = Consultations;
 }

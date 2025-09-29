@@ -3,6 +3,7 @@ import type { ErrorWithDetails } from "../utils/errorHandler";
 import admin from "./admin";
 import auth from "./auth";
 import companies from "./companies";
+import consultations from "./consultations";
 import patients from "./patients";
 import user from "./user";
 import companiesUser from "./users_companies";
@@ -52,6 +53,7 @@ export default function routes(
 	fastify.register(companies, { prefix: "/companies" });
 	fastify.register(companiesUser, { prefix: "/users-companies" });
 	fastify.register(patients, { prefix: "/patients" });
+	fastify.register(consultations, { prefix: "/consultations" });
 
 	done();
 }

@@ -5,6 +5,7 @@ export const MasterNameEnum = z.enum([
 	"users",
 	"companies_user",
 	"patients",
+	"consultations",
 ]);
 
 export interface IReply {
