@@ -12,6 +12,7 @@ import { LoadingFullScreen } from "./components/loading";
 import { AuthRoutesEnum, PrivateRoutesEnum } from "./data/routesEnums";
 import CompanyDetailsPage from "./pages/(app)/companies/CompanyDetailsPage";
 import ConsultationDetailsPage from "./pages/(app)/consultations/ConsultationDetailsPage";
+import ConsultationsPage from "./pages/(app)/consultations/ConsultationsPage";
 import Home from "./pages/(app)/home";
 import PatientCreatePage from "./pages/(app)/patients/PatientCreatePage";
 import PatientDetailsPage from "./pages/(app)/patients/PatientDetailsPage";
@@ -80,6 +81,11 @@ const PrivateRoutes: JSX.Element[] = [
 		key={PrivateRoutesEnum.PatientCreate}
 		path={PrivateRoutesEnum.PatientCreate}
 		Component={PatientCreatePage}
+	/>,
+	<Route
+		key={PrivateRoutesEnum.Consultations}
+		path={PrivateRoutesEnum.Consultations}
+		Component={ConsultationsPage}
 	/>,
 	<Route
 		key={PrivateRoutesEnum.ConsultationDetails}

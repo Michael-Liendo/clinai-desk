@@ -59,8 +59,11 @@ export default function ConsultationDetailsPage() {
 				treatment: consultationData.consultation.treatment || "",
 				notes: consultationData.consultation.notes || "",
 			});
-			// Si la consulta ya tiene datos, no empezar en modo edición
-			if (consultationData.consultation.reason_for_consultation) {
+			// Si la consulta está cerrada, nunca permitir edición
+			// Si la consulta ya tiene datos y está abierta, no empezar en modo edición
+			if (consultationData.consultation.status === "closed") {
+				setIsEditing(false);
+			} else if (consultationData.consultation.reason_for_consultation) {
 				setIsEditing(false);
 			}
 		}
@@ -140,6 +143,10 @@ export default function ConsultationDetailsPage() {
 
 	const consultation = consultationData?.consultation;
 	const patient = patientData?.patient;
+	
+	// Determinar si la consulta puede ser editada (solo si está abierta)
+	const canEdit = consultation?.status === "open";
+	const isEditingAndCanEdit = isEditing && canEdit;
 
 	if (!consultation) {
 		return (
@@ -191,7 +198,12 @@ export default function ConsultationDetailsPage() {
 										<Button onClick={handleSave}>Guardar</Button>
 									</>
 								) : (
-									<Button onClick={() => setIsEditing(true)}>Editar</Button>
+									<Button 
+										onClick={() => setIsEditing(true)}
+										disabled={!canEdit}
+									>
+										Editar
+									</Button>
 								)}
 								<Button variant="destructive" onClick={handleCloseConsultation}>
 									Cerrar consulta
@@ -271,7 +283,7 @@ export default function ConsultationDetailsPage() {
 								{/* Motivo de consulta */}
 								<div className="space-y-2">
 									<Label htmlFor="reason">Motivo de consulta</Label>
-									{isEditing ? (
+									{isEditingAndCanEdit ? (
 										<Input
 											id="reason"
 											value={formData.reason_for_consultation}
@@ -290,7 +302,7 @@ export default function ConsultationDetailsPage() {
 								{/* Síntomas */}
 								<div className="space-y-2">
 									<Label htmlFor="symptoms">Síntomas</Label>
-									{isEditing ? (
+									{isEditingAndCanEdit ? (
 										<Textarea
 											id="symptoms"
 											value={formData.symptoms}
@@ -308,7 +320,7 @@ export default function ConsultationDetailsPage() {
 								{/* Diagnóstico */}
 								<div className="space-y-2">
 									<Label htmlFor="diagnosis">Diagnóstico</Label>
-									{isEditing ? (
+									{isEditingAndCanEdit ? (
 										<Textarea
 											id="diagnosis"
 											value={formData.diagnosis}
@@ -326,7 +338,7 @@ export default function ConsultationDetailsPage() {
 								{/* Tratamiento */}
 								<div className="space-y-2">
 									<Label htmlFor="treatment">Tratamiento</Label>
-									{isEditing ? (
+									{isEditingAndCanEdit ? (
 										<Textarea
 											id="treatment"
 											value={formData.treatment}
@@ -344,7 +356,7 @@ export default function ConsultationDetailsPage() {
 								{/* Notas adicionales */}
 								<div className="space-y-2">
 									<Label htmlFor="notes">Notas adicionales</Label>
-									{isEditing ? (
+									{isEditingAndCanEdit ? (
 										<Textarea
 											id="notes"
 											value={formData.notes}

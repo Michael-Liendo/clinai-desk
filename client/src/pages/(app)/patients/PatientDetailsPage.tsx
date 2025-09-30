@@ -394,8 +394,9 @@ export default function PatientDetailsPage() {
 													</button>
 												))}
 
-											{/* Botón para crear nueva consulta */}
-											<div className="pt-2 border-t">
+											{/* Botones de acción */}
+											<div className="pt-2 border-t space-y-2">
+												{/* Botón para crear nueva consulta */}
 												{hasOpenConsultation ? (
 													<div className="text-center py-2">
 														<p className="text-sm text-muted-foreground mb-2">
@@ -405,7 +406,7 @@ export default function PatientDetailsPage() {
 															variant="outline"
 															size="sm"
 															disabled
-															className="opacity-50 cursor-not-allowed"
+															className="opacity-50 cursor-not-allowed w-full"
 														>
 															Consulta en progreso
 														</Button>
@@ -418,6 +419,18 @@ export default function PatientDetailsPage() {
 														onClick={handleCreateConsultation}
 													>
 														+ Nueva consulta
+													</Button>
+												)}
+												
+												{/* Botón para ver todas las consultas del paciente */}
+												{consultationsData?.data && consultationsData.data.length > 0 && (
+													<Button
+														variant="ghost"
+														size="sm"
+														className="w-full text-blue-600 hover:bg-blue-50"
+														onClick={() => navigate(`/consultations?patient=${data?.patient?.id}`)}
+													>
+														Ver todas las consultas ({consultationsData.data.length})
 													</Button>
 												)}
 											</div>

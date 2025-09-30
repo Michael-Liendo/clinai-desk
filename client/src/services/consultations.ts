@@ -130,6 +130,7 @@ export class ConsultationsService {
 	static async close(id: string) {
 		const request = await fetch(`/consultations/close/${id}`, {
 			method: "PATCH",
+			body: JSON.stringify({}),
 		});
 		const response: ISResponse<IConsultation> = await request.json();
 		if (response.success === false) throw new Error("Error closing consultation");
@@ -142,6 +143,7 @@ export class ConsultationsService {
 	static async reopen(id: string) {
 		const request = await fetch(`/consultations/reopen/${id}`, {
 			method: "PATCH",
+			body: JSON.stringify({}),
 		});
 		const response: ISResponse<IConsultation> = await request.json();
 		if (response.success === false) throw new Error("Error reopening consultation");
